@@ -1,5 +1,5 @@
 const express = require('express');
-const { join } = require('node:path');
+const cors = require('cors');
 const app = express();
 /**
  * Modulos de la aplicacion
@@ -12,7 +12,12 @@ const eventos = require('./src/modulos/evento/eventoRuta');
 /**
  * configuracion de la aplicacion
  */
-app.use(express.static(join(__dirname, '../cliente'))); // Servir archivos estáticos de la carpeta cliente
+
+app.use(cors({
+    origin: 'http://localhost:5173' // <--- Permite solo este origen
+}));
+
+//app.use(express.static(join(__dirname, '../cliente'))); // Servir archivos estáticos de la carpeta cliente
 app.use(express.json()); // Habilitar el uso de JSON en las peticiones
 
 /**

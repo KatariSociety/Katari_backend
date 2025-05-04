@@ -31,10 +31,7 @@
             "unit": "m"
           }
         },
-        "speed": {
-          "value": 30.5,
-          "unit": "km/h"
-        },
+        "hdop": 2.11,
         "satellites": 7
       }
     },
