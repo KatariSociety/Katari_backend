@@ -1,9 +1,9 @@
-const app = require('./app');
+const { server } = require('./app');
 const config = require('./config');
 const crearTablas = require('../modelo/database/crearTablas');
 
 crearTablas.then(() => {
-    app.listen(config.app.port, () => {
+    server.listen(config.app.port, () => {
         console.log("Servidor escuchando en el puerto", config.app.port);
     });
 }).catch(err => {
