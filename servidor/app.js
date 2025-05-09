@@ -6,7 +6,7 @@ const app = express();
  * @type {Router | {}}
  */
 const sensores = require('./src/modulos/sensores/sensoresRuta');
-const Lecturas = require('./src/modulos/lecturas/lecturaRuta');
+const Lecturas = require('./src/modulos/Lecturas/lecturaRuta');
 const dispositivo = require('./src/modulos/dispositivo/dispositivoRuta');
 const eventos = require('./src/modulos/evento/eventoRuta');
 /**
