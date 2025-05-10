@@ -1,10 +1,10 @@
 {
   "name": "katari1.0",
   "version": "1.0.0",
-  "main": "servidor/index.js",
+  "main": "servidor/server.js",
   "scripts": {
-    "start": "node servidor/index.js",
-    "dev": "nodemon servidor/index.js"
+    "start": "node servidor/server.js",
+    "dev": "nodemon servidor/server.js"
   },
   "keywords": [],
   "author": "Juan Yepez, Jarby Salazar",
