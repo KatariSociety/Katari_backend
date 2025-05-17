@@ -1,4 +1,5 @@
 const Database = require('./conexion');
+
 /**
  * crear definiciones de tablas
  */
@@ -95,21 +96,29 @@ const tablas = [
 /**
  * Función para crear las tablas
  */
-async function crearTablas() {
+function crearTablas() {
     const db = Database.open();
 
-    // Iterar sobre las definiciones de las tablas
-    tablas.forEach(({ nombre, query }) => {
-        db.run(query, (err) => {
-            if (err) {
-                console.error(`Error al crear la tabla "${nombre}":`, err.message);
-            } else {
-                console.log(`Tabla "${nombre}" creada o ya existe.`);
-            }
-        });
-    });
-    Database.close();
+    // Iniciar transacción para creación de tablas
+    db.pragma('foreign_keys = ON');
+    
+    try {
+        // Crear tablas en una transacción
+        db.transaction(() => {
+            // Iterar sobre las definiciones de las tablas
+            tablas.forEach(({ nombre, query }) => {
+                try {
+                    db.exec(query);
+                    console.log(`Tabla "${nombre}" creada o ya existe.`);
+                } catch (err) {
+                    console.error(`Error al crear la tabla "${nombre}":`, err.message);
+                    throw err; // Propagar el error para revertir la transacción
+                }
+            });
+        })();
+    } catch (err) {
+        console.error('Error al crear las tablas:', err.message);
+    }
 }
 
-
-module.exports = crearTablas();
+module.exports = crearTablas;

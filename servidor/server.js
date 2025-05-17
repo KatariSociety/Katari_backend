@@ -8,13 +8,15 @@ const crearTablas = require('../modelo/database/crearTablas');
 const PORT = process.env.PORT || 3000;
 
 // Iniciar el servidor después de crear las tablas
-crearTablas
-    .then(() => {
-        server.listen(PORT, () => {
-            console.log(`Servidor escuchando en el puerto ${PORT}`);
-        });
-    })
-    .catch(err => {
-        console.error('Error durante la inicialización de la base de datos:', err);
-        process.exit(1); // Salir con error
+try {
+    // Ahora crearTablas es una función síncrona, no una promesa
+    crearTablas();
+    
+    // Iniciar el servidor
+    server.listen(PORT, () => {
+        console.log(`Servidor escuchando en el puerto ${PORT}`);
     });
+} catch (err) {
+    console.error('Error durante la inicialización de la base de datos:', err);
+    process.exit(1); // Salir con error
+}
