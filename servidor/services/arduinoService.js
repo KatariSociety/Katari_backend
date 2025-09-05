@@ -106,9 +106,13 @@ class ArduinoService extends EventEmitter {
      * Maneja los datos recibidos del Arduino
      * @param {string} data Datos recibidos
      */
+        /**
+     * Maneja los datos recibidos del Arduino
+     * @param {string} data Datos recibidos
+     */
     _handleData(data) {
         try {
-            console.log("Datos recibidos:", data);
+            console.log("📡 Datos recibidos del Arduino:", data.substring(0, 100) + (data.length > 100 ? "..." : ""));
 
             // Manejar mensajes especiales
             if (data.startsWith('KATARI_SENSORS_READY')) {
@@ -127,25 +131,50 @@ class ArduinoService extends EventEmitter {
             try {
                 const jsonData = JSON.parse(data);
                 
-                // Procesar datos de sensores
+                console.log("✅ JSON válido recibido del Arduino:");
+                console.log("  - Device ID:", jsonData.device_id);
+                console.log("  - Timestamp:", jsonData.timestamp);
+                console.log("  - Sensores activos:", {
+                    SCD40: jsonData.status_scd40,
+                    GY91: jsonData.status_gy91,
+                    GPS: jsonData.status_gps,
+                    Calibrado: jsonData.calibrated
+                });
+                
+                // Procesar datos de sensores para la base de datos
                 if (jsonData.device_id && jsonData.device_id.includes('KATARI')) {
                     this._processSensorData(jsonData);
                 }
                 
-                // Emitir evento con los datos formateados
+                // Emitir evento con los datos formateados para el frontend
+                console.log("� Emitiendo datos al frontend...");
                 this.emit('data', jsonData);
+                
             } catch (jsonError) {
-                // No es JSON válido, emitir como texto
-                this.emit('data', data);
+                // No es JSON válido, ignorar silenciosamente si es un mensaje de debug
+                if (data.includes('✅') || 
+                    data.includes('📊') || 
+                    data.includes('🌐') || 
+                    data.includes('📍') ||
+                    data.includes('====') ||
+                    data.includes('Datos actualizados') ||
+                    data.includes('Calibrando')) {
+                    // Es mensaje de debug, ignorar
+                    return;
+                }
+                
+                console.log("⚠️ Datos no JSON recibidos:", data.substring(0, 50) + "...");
+                return;
             }
 
             // Actualizar estado si no estaba conectado
             if (!this.isConnected) {
                 this.isConnected = true;
                 this.emit('status', { connected: true });
+                console.log("🔌 Estado actualizado: Arduino conectado");
             }
         } catch (err) {
-            console.error("Error al procesar datos del Arduino:", err);
+            console.error("❌ Error al procesar datos del Arduino:", err);
             this.emit('data', data);
         }
     }
