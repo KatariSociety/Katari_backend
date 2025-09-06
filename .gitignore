@@ -1,4 +1,5 @@
 node_modules
 .idea
 .env
-package-lock.jsonmodelo/database/*.db
+package-lock.json
+modelo/database/*.db
