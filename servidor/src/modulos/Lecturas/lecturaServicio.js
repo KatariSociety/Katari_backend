@@ -1,22 +1,39 @@
 const TABLE_NAME = 'tblLectura';
 
 module.exports = function (db) {
-    async function getAll() {
+    async function obtenerTodasLasLecturas() {
         return await db.getAll(TABLE_NAME);
     }
-    async function getAllBySensor(sensorId) {
-        return await db.getOne(TABLE_NAME, 'id_sensor', sensorId);
+    
+    async function obtenerLecturasPorSensor(sensorId) {
+        const query = `SELECT * FROM ${TABLE_NAME} WHERE id_sensor = ?`;
+        return await db.executeSelectQuery(query, [sensorId]);
     }
-    async function getAllById(lacturaId) {
-        return await db.getOne(TABLE_NAME, 'id_lectura', lacturaId);
+    
+    async function obtenerLecturaPorId(lecturaId) {
+        return await db.getOne(TABLE_NAME, 'id_lectura', lecturaId);
     }
-    async function insert(lecturaData) {
+    
+    async function insertarLectura(lecturaData) {
         return await db.insert(TABLE_NAME, lecturaData);
     }
+    
+    async function obtenerLecturasPorEventoId(eventoId) {
+        const query = `SELECT * FROM ${TABLE_NAME} WHERE id_evento = ?`;
+        return await db.executeSelectQuery(query, [eventoId]);
+    }
+
+    async function obtenerLecturasPorSensorYEventoId(sensorId, eventoId) {
+        const query = `SELECT * FROM ${TABLE_NAME} WHERE id_sensor = ? AND id_evento = ?`;
+        return await db.executeSelectQuery(query, [sensorId, eventoId]);
+    }
+
     return {
-        getAll,
-        getAllBySensor,
-        getAllById,
-        insert
+        obtenerTodasLasLecturas,
+        obtenerLecturasPorSensor,
+        obtenerLecturaPorId,
+        insertarLectura,
+        obtenerLecturasPorEventoId,
+        obtenerLecturasPorSensorYEventoId
     };
 };

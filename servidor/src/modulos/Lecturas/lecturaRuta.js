@@ -1,74 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const respuesta = require('../../utilidades/respuestas');
 const controlador = require('./index');
 
-router.get('/', async (req, res) => {
-    try {
-        const lectura = await controlador.obtenerLecturas();
+router.get('/', controlador.obtenerLecturas);
+router.post('/', controlador.insertarLectura);
 
-        respuesta.success(req, res, {
-            success: true,
-            message: lectura.length > 0 ? 'Datos encontrados exitosamente' : 'Datos no encontrados',
-            data: lectura,
-        }, lectura.length > 0 ? 200 : 404);
-    } catch (error) {
-        respuesta.error(req, res, {
-            success: false,
-            message: 'Ocurrio un error al obtener los datos',
-            error: error.message,
-        }, 500);
-    }
-});
-router.get('/sensor/:sensorId', async (req, res) => {
-    try {
-        const lectura = await controlador.obtenerLecturasPorSensor(req.params.sensorId);
+router.get('/sensor/:sensorId', controlador.obtenerLecturasPorSensor);
+router.get('/evento/:eventoId', controlador.obtenerLecturasPorEvento);
+router.get('/sensor/:sensorId/evento/:eventoId', controlador.obtenerLecturasPorSensorYEvento);
 
-        respuesta.success(req, res, {
-            success: true,
-            message: lectura.length > 0 ? 'Datos encontrados exitosamente' : 'Datos no encontrados',
-            data: lectura,
-        }, lectura.length > 0 ? 200 : 404);
-    } catch (error) {
-        respuesta.error(req, res, {
-            success: false,
-            message: 'Ocurrio un error al obtener los datos',
-            error: error.message,
-        }, 500);
-    }
-});
-router.get('/:lecturaId', async (req, res) => {
-    try {
-        const lectura = await controlador.obtenerLecturasPorId(req.params.lecturaId);
+router.get('/:lecturaId', controlador.obtenerLecturasPorId);
 
-        respuesta.success(req, res, {
-            success: true,
-            message: lectura.length > 0 ? 'Datos encontrados exitosamente' : 'Datos no encontrados',
-            data: lectura,
-        }, lectura.length > 0 ? 200 : 404);
-    } catch (error) {
-        respuesta.error(req, res, {
-            success: false,
-            message: 'Ocurrio un error al obtener los datos',
-            error: error.message,
-        }, 500);
-    }
-});
-router.post('/', async (req, res) => {
-    try {
-        const lectura = await controlador.insertarLectura(req.body);
-
-        respuesta.success(req, res, {
-            success: true,
-            message: 'Datos insertados exitosamente',
-            data: lectura,
-        }, 201);
-    } catch (error) {
-        respuesta.error(req, res, {
-            success: false,
-            message: 'Ocurrio un error al insertar los datos',
-            error: error.message,
-        }, 500);
-    }
-});
 module.exports = router;
