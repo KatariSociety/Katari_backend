@@ -3,6 +3,7 @@ const { createExpressApp, configureSocketIO } = require('./config');
 const setupRoutes = require('./routes');
 const SocketController = require('./controllers/socketController');
 const arduinoService = require('./services/arduinoService');
+const dataProcessingService = require('./services/dataProcessingService');
 
 /**
  * Inicializa la aplicación
@@ -29,6 +30,9 @@ function initializeApp() {
 
 // Inicializar la aplicación
 const { app, server } = initializeApp();
+
+// Conectar el servicio de procesamiento para que escuche al arduinoService
+dataProcessingService.listenTo(arduinoService);
 
 // Intentar conectar al Arduino automáticamente al iniciar
 arduinoService.connect();
