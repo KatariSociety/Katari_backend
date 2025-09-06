@@ -29,7 +29,19 @@ class SocketController {
 
         // Reenviar datos del Arduino a todos los clientes
         arduinoService.on('data', (data) => {
-            this.io.emit('mpu_data', data);
+            this.io.emit('sensor_data', data);
+        });
+
+        // Evento cuando los sensores están listos
+        arduinoService.on('sensor_ready', (info) => {
+            console.log('✅ Sensores Katari inicializados');
+            this.io.emit('sensor_ready', info);
+        });
+
+        // Evento de calibración GPS
+        arduinoService.on('gps_calibrating', (info) => {
+            console.log('📍 GPS calibrando');
+            this.io.emit('gps_calibrating', info);
         });
     }
 

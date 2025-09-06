@@ -10,7 +10,7 @@ const ARDUINO_CONFIG = {
         '/dev/ttyUSB1',
         'COM4'
     ],
-    BAUD_RATE: 9600,
+    BAUD_RATE: 115200,
     RECONNECT_TIMEOUT: 5000,
     DISCOVERY_TIMEOUT: 10000
 };
