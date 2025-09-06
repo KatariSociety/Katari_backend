@@ -9,10 +9,10 @@ module.exports = function (servicio) {
             const offset = (page - 1) * limit;
             
             // Validar límites
-            if (limit > 100) {
+            if (limit > 500) {
                 return respuesta.success(req, res, {
                     success: false,
-                    message: 'El límite máximo es 100 registros por página',
+                    message: 'El límite máximo es 500 registros por página',
                 }, 400);
             }
             
