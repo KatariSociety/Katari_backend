@@ -3,6 +3,9 @@ module.exports = function (db) {
     async function getAll() {
         return await db.getAll(TABLE_NAME);
     }
+    async function getById(eventoId) {
+        return await db.getOne(TABLE_NAME, 'id_evento', eventoId);
+    }
     async function insert(eventoData) {
         return await db.insert(TABLE_NAME, eventoData);
     }
@@ -14,6 +17,7 @@ module.exports = function (db) {
     }
     return {
         getAll,
+        getById,
         insert,
         update,
         remove

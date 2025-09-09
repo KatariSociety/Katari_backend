@@ -115,10 +115,10 @@ module.exports = function (servicio) {
             const limit = parseInt(req.query.limit) || 50;
             const offset = (page - 1) * limit;
             
-            if (limit > 100) {
+            if (limit > 200) {
                 return respuesta.success(req, res, {
                     success: false,
-                    message: 'El límite máximo es 100 registros por página',
+                    message: 'El límite máximo es 200 registros por página',
                 }, 400);
             }
             
