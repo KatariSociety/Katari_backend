@@ -16,7 +16,9 @@ class DataProcessingService extends EventEmitter {
      * @param {import('./arduinoService')} arduinoService
      */
     listenTo(arduinoService) {
+        console.log('🔗 DataProcessingService: Configurando listeners para ArduinoService');
         arduinoService.on('data', this._onRawDataReceived.bind(this));
+        console.log('✅ DataProcessingService: Listener configurado para evento "data"');
     }
 
     /**
@@ -24,17 +26,21 @@ class DataProcessingService extends EventEmitter {
      * @param {object} data
      */
     _onRawDataReceived(data) {
+        console.log('🔄 DataProcessingService: Datos recibidos', { device_id: data.device_id, timestamp: data.timestamp });
+        
         // 1. Procesar y almacenar los datos en la base de datos si son de un dispositivo Katari.
         if (data.device_id && data.device_id.includes('KATARI')) {
             this._processAndStoreSensorData(data);
         }
 
         // 2. Emitir evento con los datos generales para el frontend.
+        console.log('📤 DataProcessingService: Emitiendo formatted_data');
         this.emit('formatted_data', data);
 
         // 3. Formatear y emitir datos específicos si existen (ej. MPU).
         if (data.accel_x !== undefined || data.gyro_x !== undefined) {
             const mpuData = this._formatMpuData(data);
+            console.log('📤 DataProcessingService: Emitiendo formatted_mpu_data');
             this.emit('formatted_mpu_data', mpuData);
         }
     }

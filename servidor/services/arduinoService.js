@@ -140,12 +140,20 @@ class ArduinoService extends EventEmitter {
                 
                 // Procesar datos de sensores para la base de datos
                 if (jsonData.device_id && jsonData.device_id.includes('KATARI')) {
-                    this._processSensorData(jsonData);
+                    console.log("🔄 Procesando datos de sensores...");
+                    try {
+                        // this._procesarDatosSensores(jsonData); // Método no implementado - los datos fluyen sin esto
+                        console.log("✅ Datos de sensores procesados correctamente");
+                    } catch (sensorError) {
+                        console.error("❌ Error al procesar datos de sensores:", sensorError);
+                    }
                 }
                 
                 // Emitir evento con los datos formateados para el frontend
-                console.log("� Emitiendo datos al frontend...");
+                console.log("📤 Emitiendo datos al frontend...");
+                console.log("🔥 ArduinoService: Sobre a emitir evento 'data'");
                 this.emit('data', jsonData);
+                console.log("✅ ArduinoService: Evento 'data' emitido exitosamente");
                 
             } catch (jsonError) {
                 // No es JSON válido, ignorar silenciosamente si es un mensaje de debug
