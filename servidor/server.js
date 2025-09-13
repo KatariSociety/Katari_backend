@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 const { server } = require('./app');
-const crearTablas = require('../modelo/database/crearTablas');
+//const crearTablas = require('../modelo/database/crearTablas');
 
 // Definir puerto por defecto
 const PORT = process.env.PORT || 3000;
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Iniciar el servidor después de crear las tablas
 try {
     // Ahora crearTablas es una función síncrona, no una promesa
-    crearTablas();
+    //crearTablas();
     
     // Iniciar el servidor
     server.listen(PORT, () => {

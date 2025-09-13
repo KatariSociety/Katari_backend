@@ -4,41 +4,25 @@ const path = require('path');
 // Ruta al archivo SQLite
 const dbPath = path.resolve(__dirname, 'database.db');
 
-/**
- * Clase que maneja la conexión a la base de datos
- */
-class DatabaseConnection {
-    static db;
+let db;
 
-    /**
-     * Abre la conexión a la base de datos
-     * @returns {Database} - Retorna la instancia de la conexión a la base de datos
-     */
-    static open() {
-        if (!this.db) {
-            try {
-                this.db = new Database(dbPath);
-                console.log('Conectado a la base de datos.');
-            } catch (err) {
-                console.error('Error al abrir la base de datos:', err.message);
-                throw err;
-            }
-        }
-        return this.db;
-    }
+try {
+    // Crea una única instancia persistente de la base de datos
+    db = new Database(dbPath);
+    db.pragma('journal_mode = WAL'); // Para concurrencia de lectura
+    console.log('Conectado a la base de datos SQLite');
 
-    /**
-     * Cierra la conexión a la base de datos
-     */
-    static close() {
-        if (this.db) {
-            this.db.close();
-            this.db = null;
+    // Cierra la conexión cuando la aplicación termina
+    process.on('exit', () => {
+        if (db && db.open) {
+            db.close();
             console.log('Conexión a la base de datos cerrada.');
-        } else {
-            console.log('No hay conexión abierta para cerrar.');
         }
-    }
+    });
+
+} catch (err) {
+    console.error('Error al abrir la base de datos:', err.message);
+    process.exit(1); 
 }
 
-module.exports = DatabaseConnection;
+module.exports = db;

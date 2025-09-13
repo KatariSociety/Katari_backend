@@ -1,4 +1,4 @@
-const Database = require('./conexion');
+const db = require('./conexion');
 
 /**
  * Ejecutar una consulta SELECT en la base de datos
@@ -7,7 +7,6 @@ const Database = require('./conexion');
  * @returns {Array} - Resultados de la consulta
  */
 function executeSelectQuery(query, params = []) {
-    const db = Database.open();
     try {
         const stmt = db.prepare(query);
         return stmt.all(...params);
@@ -24,7 +23,6 @@ function executeSelectQuery(query, params = []) {
  * @returns {Object} - Objeto con información sobre la operación
  */
 function executeNonSelectQuery(query, params = []) {
-    const db = Database.open();
     try {
         const stmt = db.prepare(query);
         const result = stmt.run(...params);
@@ -34,6 +32,41 @@ function executeNonSelectQuery(query, params = []) {
         };
     } catch (err) {
         console.error('Error al ejecutar consulta no SELECT:', err.message);
+        throw err;
+    }
+}
+
+/**
+ * Inserta múltiples filas en una tabla dentro de una única transacción.
+ * @param {string} table - Nombre de la tabla
+ * @param {Array<Object>} dataArray - Array de objetos a insertar
+ * @returns {number} - Número de filas insertadas
+ */
+function insertMany(table, dataArray) {
+    if (!dataArray || dataArray.length === 0) {
+        return 0;
+    }
+    
+    const columns = Object.keys(dataArray[0]).join(', ');
+    const placeholders = Object.keys(dataArray[0]).map(() => '?').join(', ');
+    const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
+
+    // Usa una transacción para un rendimiento masivo
+    const insertTransaction = db.transaction((items) => {
+        const stmt = db.prepare(query);
+        let totalChanges = 0;
+        for (const item of items) {
+            const result = stmt.run(...Object.values(item));
+            totalChanges += result.changes;
+        }
+        return totalChanges;
+    });
+
+    try {
+        const changes = insertTransaction(dataArray);
+        return { changes };
+    } catch (err) {
+        console.error('Error en la inserción por lotes (batch insert):', err.message);
         throw err;
     }
 }
@@ -110,5 +143,6 @@ module.exports = {
     update,
     remove,
     executeSelectQuery,
-    executeNonSelectQuery
+    executeNonSelectQuery,
+    insertMany
 };
