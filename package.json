@@ -12,6 +12,7 @@
   "description": "Proyecto web de Katari society, realizado para la competencia LASC",
   "dependencies": {
     "@serialport/parser-readline": "^13.0.0",
+    "axios": "^1.9.0",
     "better-sqlite3": "^11.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
