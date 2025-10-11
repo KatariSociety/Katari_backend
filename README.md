@@ -1,6 +1,6 @@
 # 🚀 Katari Society - Sistema de Telemetría
 
-> **Proyecto web de Katari Society, realizado para la competencia LASC**
+> **Proyecto web de Katari Society**
 
 Katari Society es un sistema completo de telemetría en tiempo real para cohetes y satélites, desarrollado con tecnologías modernas para el monitoreo y análisis de datos de vuelo.
 
@@ -126,8 +126,6 @@ La base de datos SQLite se inicializa automáticamente con las siguientes tablas
 - `tblSensor` - Sensores instalados
 - `tblEvento` - Eventos de vuelo
 - `tblLectura` - Datos de telemetría
-- `tblImagen` - Imágenes capturadas
-- `tblEventoSensor` - Relaciones evento-sensor
 
 ### Configuración de Puertos Seriales
 El sistema busca automáticamente en los siguientes puertos:
@@ -286,15 +284,8 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ## 👥 Autores
 
-- **Juan Yepez** - *Desarrollo Backend* - [@juanes](https://github.com/juanes)
+- **Juan Yepez** - *Desarrollo Backend* - [@juanes-yepez](https://github.com/JYPPZ)
 - **Jarby Salazar** - *Desarrollo Frontend* - [@jarbydaniel](https://github.com/jarbydaniel)
 
-## 🙏 Agradecimientos
 
-- Equipo de Katari Society
-- Comunidad de desarrollo de código abierto
-- Patrocinadores de la competencia LASC
-
----
-
-**Katari Society** - *Impulsando la exploración espacial desde Colombia* 🚀🇨🇴
+**Katari Society** - *Impulsando la exploración espacial desde Colombia 🚀*
