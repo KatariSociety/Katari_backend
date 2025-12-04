@@ -1,6 +1,8 @@
 // Cargar variables de entorno
 require('dotenv').config();
 
+require('./logger');
+
 const { server } = require('./app');
 //const crearTablas = require('../modelo/database/crearTablas');
 

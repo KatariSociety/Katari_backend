@@ -5,7 +5,7 @@ const sensoresRoutes = require('./src/modulos/sensores/sensoresRuta');
 const lecturasRoutes = require('./src/modulos/Lecturas/lecturaRuta');
 const dispositivosRoutes = require('./src/modulos/dispositivo/dispositivoRuta');
 const eventosRoutes = require('./src/modulos/evento/eventoRuta');
-const mcpRoutes = require('./routes/mcpRoutes');
+const mcpRoutesV2 = require('./routes/mcpRoutesV2');
 
 /**
  * Configurar todas las rutas de la aplicación
@@ -17,7 +17,7 @@ function setupRoutes(app) {
     app.use('/lecturas', lecturasRoutes);
     app.use('/dispositivos', dispositivosRoutes);
     app.use('/eventos', eventosRoutes);
-    app.use('/api/mcp', mcpRoutes);
+    app.use('/api/mcp', mcpRoutesV2);
     
     // Opcionalmente, podemos agregar un manejador para rutas no encontradas
     app.use('*', (req, res) => {
