@@ -1,13 +1,16 @@
 const http = require('http');
-const { createExpressApp, configureSocketIO } = require('./config');
+const { createExpressApp, configureSocketIO, ROCKET_CONFIG, CANSAT_CONFIG } = require('./config');
 const setupRoutes = require('./routes');
-const SocketController = require('./controllers/socketController');
-const arduinoService = require('./services/arduinoService');
-const dataProcessingService = require('./services/dataProcessingService');
+const TelemetryController = require('./controllers/TelemetryController');
+const CansatController = require('./controllers/CansatController');
+const RocketService = require('./services/RocketService');
+const RocketDataProcessing = require('./services/RocketDataProcessing');
+const CansatService = require('./services/CansatService');
+const CansatDataProcessing = require('./services/CansatDataProcessing');
 
 /**
  * Inicializa la aplicación
- * @returns {Object} Objeto con la aplicación Express y el servidor HTTP
+ * @returns {Object} Objeto con la aplicación Express, servidor HTTP y servicios
  */
 function initializeApp() {
     // Crear aplicación Express
@@ -19,23 +22,45 @@ function initializeApp() {
     // Configurar Socket.io
     const io = configureSocketIO(server);
     
-    // Configurar controlador de socket
-    new SocketController(io);
+    // Inicializar servicios del cohete
+    const rocketService = new RocketService(ROCKET_CONFIG);
+    const rocketDataProcessing = new RocketDataProcessing(ROCKET_CONFIG);
+    
+    // Inicializar servicios del CanSat
+    const cansatService = new CansatService(CANSAT_CONFIG);
+    const cansatDataProcessing = new CansatDataProcessing(CANSAT_CONFIG);
+    
+    // Conectar servicios
+    rocketDataProcessing.listenTo(rocketService);
+    cansatDataProcessing.listenTo(cansatService);
+    
+    // Configurar controladores de telemetría
+    new TelemetryController(io, rocketDataProcessing);
+    new CansatController(io, cansatDataProcessing);
     
     // Configurar rutas
     setupRoutes(app);
     
-    return { app, server };
+    return { app, server, rocketService, rocketDataProcessing, cansatService, cansatDataProcessing };
 }
 
 // Inicializar la aplicación
-const { app, server } = initializeApp();
+const { app, server, rocketService, rocketDataProcessing, cansatService, cansatDataProcessing } = initializeApp();
 
-// Conectar el servicio de procesamiento para que escuche al arduinoService
-dataProcessingService.listenTo(arduinoService);
+// Intentar conectar al receptor LoRa del cohete automáticamente
+console.log('Iniciando conexión con receptor LoRa del cohete...');
+rocketService.connect();
 
-// Intentar conectar al Arduino automáticamente al iniciar
-arduinoService.connect();
+// Intentar conectar al CanSat automáticamente
+console.log('Iniciando conexión con CanSat...');
+cansatService.connect();
 
-// Exportar la aplicación y el servidor
-module.exports = { app, server };
+// Exportar la aplicación, servidor y servicios
+module.exports = { 
+    app, 
+    server, 
+    rocketService, 
+    rocketDataProcessing,
+    cansatService,
+    cansatDataProcessing
+};

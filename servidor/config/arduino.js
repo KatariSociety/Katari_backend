@@ -8,7 +8,10 @@ const ARDUINO_CONFIG = {
         '/dev/ttyACM1',
         '/dev/ttyUSB0',
         '/dev/ttyUSB1',
-        'COM4'
+        'COM3',
+        'COM4',
+        'COM5',
+        'COM6'
     ],
     BAUD_RATE: 115200,
     RECONNECT_TIMEOUT: 5000,
